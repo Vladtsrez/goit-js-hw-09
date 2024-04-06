@@ -43,8 +43,8 @@ formSection.appendChild(form);
 
 function updateForm() {
   const formData = {
-    email: form.querySelector('input[name="email"]').value,
-    message: form.querySelector('textarea[name="message"]').value,
+    email: form.querySelector('input[name="email"]').value.trim(),
+    message: form.querySelector('textarea[name="message"]').value.trim(),
   };
 
   localStorage.setItem('feedback-form-state', JSON.stringify(formData));
@@ -65,9 +65,19 @@ function clearForm() {
 form.addEventListener('submit', e => {
   e.preventDefault();
 
+  const emailValue = form.querySelector('input[name="email"]').value.trim();
+  const messageValue = form
+    .querySelector('textarea[name="message"]')
+    .value.trim();
+
+  if (!emailValue || !messageValue) {
+    alert('Please fill all fields');
+    return;
+  }
+
   const formData = {
-    email: form.querySelector('input[name="email"]').value,
-    message: form.querySelector('textarea[name="message"]').value,
+    email: emailValue,
+    message: messageValue,
   };
 
   console.log(formData);
@@ -81,7 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedFormData) {
     const formData = JSON.parse(savedFormData);
 
-    form.querySelector('input[name="email"]').value = formData.email;
-    form.querySelector('textarea[name="message"]').value = formData.message;
+    if (formData.email !== undefined) {
+      form.querySelector('input[name="email"]').value = formData.email;
+    }
+
+    if (formData.message !== undefined) {
+      form.querySelector('textarea[name="message"]').value = formData.message;
+    }
   }
 });
